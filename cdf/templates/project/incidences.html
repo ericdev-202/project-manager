@@ -1,0 +1,98 @@
+{% extends 'project/base.html' %}
+{% load static %}
+{% load leaflet_tags %}
+{% block title%}
+View Incidences
+{% endblock%}
+{% block content %}
+
+<h1 align="middle">CDF REPORTED INCIDENCES</h1>
+<div class="incidences">
+<div class="row">
+	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+		{% for r in reports %}
+			<div class="packages" id="packages">
+				<h3>{{r.opinion}}</h3>
+				<img src="{{r.image.url}}"><br>
+				<p>{{r.description | truncatewords:"10"}}</p>
+			</div>
+		{% endfor %}
+		{% include 'temps/pagination.html' %}
+	</div>
+<script type="text/javascript">
+	var datasets;
+	function highlightFeature(e){
+		var layer = e.target;
+		layer.setStyle(
+			{
+				weight: 5,
+				color: 'black',
+				fillColor: 'red',
+				fillOpacity: 0.2,
+			}
+		);
+	}
+	function resetHighlight(e){
+		stateslayer.restStyle(e.target);
+	}
+	function zoomToFeature(e){
+		map.fitBounds(e.target.getBounds());
+	}
+               layer.on(
+					{
+						mouseover: highlightFeature,
+						mouseout: resetHighlight,
+						click: zoomToFeature
+					}
+				);
+	
+function layer(map,options){
+	// L.marker([-0.023, 37.5]).addTo(map);
+	var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    var opentopomap = new L.TileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
+    var arcon = new L.tileLayer('http://server.arcgisonline.com/ArcGis/rest/services/World_Imagery/Mapserver/tile/{z}/{y}/{x}');
+	datasets = new L.GeoJSON.AJAX("{% url 'incidentdata' %}",{
+					 onEachFeature:function layerpopup(feature,layer){
+				var props = feature.properties;
+                var content = `<h1>${props.opinion}<h2/><h3>${props.opinion}</h3><p>${props.description}</p>`;
+                layer.bindPopup(content);
+            }
+				});
+				datasets.addTo(map);
+	
+
+	// Heat map
+	var heat = L.heatLayer(datasets, {radius:12,blur:25,maxZoom:11}).addTo(map);
+
+	// end heatmap
+	var baseLayers = {
+                        'OSM':osm
+                     }
+    var groupedOverlays = {
+                        "layers": {
+                        	"Incident Posts":datasets,
+                        	"OpenTopoMap":opentopomap,
+                        	"Imagery": arcon
+                        		
+                       	}
+                    };
+    L.control.groupedLayers(baseLayers,groupedOverlays).addTo(map);
+    L.Control.geocoder().addTo(map);
+   	L.Routing.control({
+                    waypoints:[
+                        L.latLng(-0.071068, 34.498469),
+            			L.latLng(-0.128746, 34.511862)
+                        	],
+                        	routeWhileDragging:true,
+                        	geocoder:L.Control.Geocoder.nominatim()
+                    }).addTo(map);
+
+			}
+		</script>
+	<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+		{% leaflet_map 'incidencesmap' callback="layer" %}
+	</div>
+</div>
+</div>
+
+{% endblock %}

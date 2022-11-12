@@ -1,0 +1,102 @@
+<!-- //templates/edit.html -->
+{% extends "Admin/base.html" %}
+ {% load widget_tweaks %}
+ 
+
+ 
+{% block content %}
+  <section class="home-section" style="margin-top:80px;left: px;">
+    <div class="home-content">
+      <!-- <i class='bx bx-menu' ></i> -->
+      <!-- <span class="text">Drop Down Sidebar</span> -->
+      <div class="col-md-1">
+    <!-- <h4>Django CRUD (Create Read Update Delete) Example - Bootstrap Datatable</h4>   -->
+ <form role="" method="post" action="/project_manager_progress/">  
+   {% csrf_token %}  
+  <div class="container">  
+ <br>  
+  <div class="form-group row">  
+  <label class="col-sm-12 col-form-label"></label>  
+  <div class="col-sm-4">  
+  <h3>Progress Details</h3>  
+  </div>  
+   </div>  
+
+     <div class="form-group row">  
+  <!-- <label  class="col-sm-2 col-form-label">Project Name:</label>   -->
+  <label class="col-sm-2 col-form-label" for="contractor">Contractor Project</label>
+  <div class="col-sm-4">  
+
+    {% render_field form.contrdetails class="form-control" maxlength="150"%}  
+</div>  
+   </div>   
+        <div class="form-group row">  
+  <!-- <label  class="col-sm-2 col-form-label">Project Name:</label>   -->
+  <label class="col-sm-2 col-form-label" for="contractor">Engineer Project</label>
+  <div class="col-sm-4">  
+    {% render_field form.engdetails class="form-control" maxlength="150"%}  
+</div>  
+   </div>   
+   <div class="form-group row">  
+  <label class="col-sm-2 col-form-label">Project Manager Report:</label>  
+  <div class="col-sm-4">  
+   <input type="file" class="form-control" name="proj_report" required maxlength="150" />  
+  </div>  
+   </div> 
+      <div class="form-group row">  
+  <label class=" colform-label"></label>  
+  <div class="col-sm-2">
+  {{ form_class.media}}  
+    {{form_class}}
+  </div>  
+   </div>   
+<!--   <div class="form-group row">  
+  <label class="col-sm-2 col-form-label">Progress:</label>  
+  <div class="col-sm-4">  
+   <input type="text" class="form-control" pattern="[A-Za-z0-9-]+$" name="progress"  required maxlength="150" />  
+  </div>  
+   </div>     
+<div class="form-group row">  
+  <label class="col-sm-2 col-form-label">Phases:</label>  
+  <div class="col-sm-4">  
+   <select style="" class="form-control" required name="phases" id="id_phases">
+          <option>Select phase here</option>
+          <option>phase1</option>
+          <option>phase2</option>
+          <option>phase3</option>
+          <option>phase4</option>
+          <option>phase5</option>
+        </select>
+  </div>  
+   </div>   -->
+         <div class="form-group row">  
+  <label class="col-sm-2 col-form-label">Project Approval:</label>  
+  <div class="col-sm-4">  
+   <select style="" class="form-control" required name="proj_approve" id="id_proj_approve">
+          <!-- <option>Select Acceptance here</option> -->
+          <option>approved</option>
+          <option>notapproved</option>
+        </select>
+  </div>  
+   </div>   
+
+  
+   
+  <div class="form-group row">  
+  <label class="col-sm-1 col-form-label"></label>  
+  <div class="col-sm-4">  
+  <button type="submit" class="btn btn-success btn-lg">Save</button>  
+  </div>  
+   </div>  
+  </div>  
+ </form>  
+    </div>
+  </section>
+
+{% endblock content %}   
+
+
+
+
+
+

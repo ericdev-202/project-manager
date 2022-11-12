@@ -1,0 +1,18 @@
+asgiref==3.4.1
+Django==3.2.14
+django-geojson==3.2.1
+django-leaflet==0.28.3
+django-widget-tweaks==1.4.11
+djangorestframework==3.13.1
+GDAL @ file:///home/eric/Downloads/GDAL-3.4.1-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl
+jsonfield==3.1.0
+lxml==4.9.1
+numpy==1.19.5
+pandas==1.1.5
+Pillow==8.4.0
+python-dateutil==2.8.2
+pytz==2022.1
+simplejson==3.17.6
+six==1.16.0
+sqlparse==0.4.2
+typing_extensions==4.1.1

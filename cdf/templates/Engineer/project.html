@@ -1,0 +1,480 @@
+{% extends 'Engineer/index.html' %}
+{% load static %}
+{% load leaflet_tags %}
+{% block title%}
+Projects
+{% endblock%}
+{% block content %}
+<section style="margin-top:120px" class="home-section">
+<div class="home-content">
+    <div class="col-md-12">
+<script type="text/javascript" src="{%static 'js/jquery-3.2.1.min.js' %}"></script>
+<script type="text/javascript" src="{%static 'turf/turf.min.js' %}"></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+<script type="text/javascript" src="{%static 'projects.geojson' %}"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<div class="">
+<script type="text/javascript">
+
+	function GetColor(ward){
+		if (ward == 'Igembe Central') {
+			return "brown";
+		}else if(ward == 'Igembe South'){
+			return "blue";
+		}else if(ward == 'Igembe North'){
+			return "lime";
+		}else if(ward == 'North Imenti'){
+			return "orange";
+		}else if(ward == 'Cental Imenti'){
+			return "yellow";
+		}else if(ward == 'South Imenti'){
+			return "magenta";
+		}else if(ward == 'Buuri'){
+			return "grey";
+		}else if(ward == 'Tigania East'){
+			return "green";
+		}else if(ward == 'Tigania West'){
+			return "purple";
+		}else{
+			alert('Problem');
+		}
+	}
+ // function GetColor(ward){
+	//  	if(ward == 'Igembe Central'){
+	//  		return "brown";
+	//  	}else if(ward == 'Igembe South'){
+	//  		return "blue";
+	//  	}else if(ward == 'Igembe North'){
+	//  		return "lime";
+	//  	}else if(ward == 'North Imenti'){
+	//  		return "orange";
+	//  	}else if(ward == 'Cental Imenti'){
+	//  		return "yellow";
+	//  	}else if(ward == 'South Imenti'){
+	//  		return "magenta";
+	//  	}else if(ward == 'Buuri'){
+	//  		return "green";
+	//  	}else if(ward == 'Tigania East'){
+	//  		return "grey";
+	//  	}else if(ward == 'Tigania West'){	
+	//  		return "purple";
+	//  	}else{
+	//  		alert('Problem');
+	//  	}
+	//  }
+	 function StateStyle(feature){
+	 	return{
+	 		fillColor:GetColor(feature.properties.const_nam),
+	 		weight: 2,
+	 		opacity: 1,
+	 		color:"white",
+	 		dashArray:4,
+	 		fillOpacity:0.2,
+	 	}
+	 }
+
+
+function layerpopup(feature,layer){
+	var props = feature.properties;
+    // var content = `<h1>${props.project}<h2/><h3>${props.sectors}</h3><p>${props.descrition}</p>`;
+    var content = `<h1 style="font-size:12px;"><b>${props.project}</b><h2/><p style="font-size:12px;">This project is in sector of <b>${props.sectors}</b>, and lies within <b>${props.county_nam}</b> county, in a place called <b>${props.location}</b>, the amount allocated to this project is <b>${props.amount}</b>, the status of the project is <b>${props.status}</b></p>
+		<p style="font-size:12px;">The brief introduction to the project: <b>${props.descrition }</b> and finally the remarks from the responsible department: <b>${props.remarks}<b></p>`;
+                layer.bindPopup(content);
+
+    			
+
+	                    
+	}
+			
+function layer(map,options){
+	// L.marker([-0.023, 37.5]).addTo(map);
+	var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    var opentopomap = new L.TileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
+    var arcon = new L.tileLayer('http://server.arcgisonline.com/ArcGis/rest/services/World_Imagery/Mapserver/tile/{z}/{y}/{x}');
+
+
+    var BlackIcon = L.icon({
+    iconUrl: "{%static 'leaflet/images/mark.gif' %}",
+    // shadowUrl: "{%static 'leaflet/images/marker-icon.png' %}",
+
+    iconSize:     [80, 80], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    // shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+		});
+	datasets = new L.GeoJSON.AJAX("{% url 'projectsdata' %}",
+		{ 
+			onEachFeature:layerpopup,
+			pointToLayer: function (feature, latlng) {
+		                return L.marker(latlng, {
+		                    icon: L.icon({
+		                        iconUrl: "{%static 'img/seme.png' %}",
+		                        iconSize: [24, 28],
+		                        iconAnchor: [12, 28],
+		                        popupAnchor: [0, -25]
+		                    }),
+		                    title: feature.properties.project,
+		                    riseOnHover: true
+		                });
+            		},
+		});
+		datasets.addTo(map);
+
+	boundary = L.geoJson(bound,
+		{
+			style:StateStyle
+		}).addTo(map);
+	// boundary = new L.GeoJSON.AJAX("{% url 'boundary' %}",{style:StateStyle});
+	// 	boundary.addTo(map);
+
+	$(document).ready(function() {
+    $.getJSON("{% url 'comj' %}", function(data, textStatus, jqXHR) {
+    	console.log(data);
+    	var m = []
+    	for (i in data) {
+    		
+    		m.push(data[i]);
+    	
+    	 // alert(m);
+    var heat = L.heatLayer([data[i]], 
+    	{
+				"radius": 25,
+				"maxOpacity": 0.8,
+				"scaleRadius": true,
+				"useLocalExtrema": true,
+				"fillColor": "red",
+				"gradient": {
+				      0.1: '#ffffb2',
+				      0.1: '#fd8d3c',
+				      0.2: '#fd8d3c',
+				      0.3: '#f03b20',
+				      0.4: '#bd0026'
+				    }
+			}).addTo(map);
+   	}
+		
+
+    });
+
+});
+
+	var baseLayers = {
+                        'OSM':osm
+                        }
+    var groupedOverlays = {
+                        "layers": {
+                        	"Projects":datasets,
+                        	"boundary": boundary,
+                        	"OpenTopoMap":opentopomap,
+                        	"Imagery": arcon
+                        		
+                       	}
+                    };
+    L.control.groupedLayers(baseLayers,groupedOverlays).addTo(map);
+    L.Control.geocoder().addTo(map);
+
+    // routing
+    var routing =  L.Routing.control({
+		  waypoints: [
+		    L.latLng(0.053543, 37.648399),
+            L.latLng(0.0463, 37.6559)
+		  ],
+		  routeWhileDragging:true,
+		  geocoder:L.Control.Geocoder.nominatim()
+		});
+
+		L.easyButton('fa-compass',
+		  function (){
+		    $('.leaflet-routing-container').is(':visible') ? routing.removeFrom(map) : routing.addTo(map)
+		  },
+		  'Routing'
+		).addTo(map);
+
+
+		function createButton(label, container) {
+		    var btn = L.DomUtil.create('button', '', container);
+		    btn.setAttribute('type', 'button');
+		    btn.innerHTML = label;
+		    return btn;
+		}
+    // end
+
+    // search
+   	L.control.search({
+   		layer: datasets,
+   		initial: false,
+   		propertyName: 'project',
+   		buildTip: function(text,val){
+   			var type = val.layer.feature.properties.project;
+   			return '<b>'+type+'</b>';
+   		}
+   	}).addTo(map);
+   	// end search
+
+   	// onMapClick function 
+   	   function onMapClick(e) {
+         	var radius = 2100
+		 	var lat = e.latlng.lat
+		 	var lng = e.latlng.lng          
+
+          $(document).ready(function() {
+	          $.getJSON("{% url 'buffer' %}", function(data, textStatus, jqXHR) {
+
+	          	var points = turf.points(data);
+	          	var point = turf.point([lat,lng]);
+				var buffered = turf.buffer(point, 2050, {units: 'metres'});
+				var ptsWithin = turf.pointsWithinPolygon(points, buffered);
+				var size = ptsWithin['features'];
+
+
+				 // Every time when user click on map we want to delete previous marker and create new marker on the new position where the user clicked      
+	          	if (typeof marker != 'undefined') {
+	              	map.removeLayer(marker);  // delete previous marker
+	              	map.removeLayer(circle);  // delete previous marker
+	              	marker = L.marker(e.latlng,{icon:BlackIcon}).addTo(map).bindPopup(size.length +' Projects are (is) within the buffer of radius ' + radius + ' metres from where you clicked').openPopup();
+		 			circle = L.circle(e.latlng,radius).addTo(map);
+	              	// marker = L.marker([lat, lng]).addTo(map);  // add new marker
+	         	 }
+	          	else {
+	          	marker = L.marker(e.latlng,{icon:BlackIcon}).addTo(map).bindPopup(size.length +' Projects are (is) within the buffer of radius  ' + radius + ' metres from where you clicked').openPopup();
+		 		circle = L.circle(e.latlng,radius).addTo(map);
+		 		
+	          }
+
+	          });
+
+      });  
+    }
+    	//  end Function
+
+        // call the onMapClick function when user click on map
+        map.on('click', onMapClick);
+
+     	// Standalone Popup
+   	 var popup = L.popup()
+            .setLatLng([0.053543, 37.648399])
+            .setContent('Click the map to know how many projects are within a radius of 2100 metres')
+            .openOn(map);
+   // legend
+   var legend = new L.control({position:"topright"});
+	 legend.onAdd = function(map){
+	 	var div = L.DomUtil.create('div','legend');
+	 	var labels = [
+	 		'Igembe Central',
+	 		'Igembe South',
+	 		'Igembe North',
+	 		'North Imenti',
+	 		'Central Imenti',
+	 		'South Imenti',
+	 		'Buuri',
+	 		'Tigania East',
+	 		'Tigania West'
+	 	];
+	 	var grades = ['Igembe Central','Igembe South','Igembe North','North Imenti','Central Imenti','South Imenti','Buuri','Tigania East','Tigania West'];
+	 	div.innerHTML = '<div><b>Meru Wards</b></div>';
+	 	for(var i = 0; i<grades.length; i++){
+	 		div.innerHTML+='<i style="background:'
+	 		 + GetColor(grades[i]) + '">&nbsp;&nbsp; </i> &nbsp;&nbsp;' 
+	 		 + labels[i]+'<br/>';
+	 	}
+	 	return div;
+	 }
+	 legend.addTo(map);
+
+}
+
+</script>
+		<div>
+			{% leaflet_map 'projectsmap' callback="layer" %}
+		</div>
+			
+			<!-- <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="margin-top:40px" >
+				<div id="packagesbar">
+					<div id="piecontainer"></div>
+				</div>
+			</div>
+			 
+	<script type="text/javascript">
+
+		//Barchart
+		Highcharts.chart('piecontainer', {
+			        chart: {
+			            type: 'column'
+			        },
+			        title: {
+			            text: '<b><i>Amount allocated per Ward</i></b>'
+			        },
+			        xAxis: {
+			            categories: ['Igembe Central','Igembe South','Igembe North','North Imenti','Central Imenti','South Imenti','Buuri','Tigania East','Tigania West']
+			        },
+			        yAxis: {
+				        	title:{
+				        		text: 'Amount of Money'
+				        	},
+				        },
+			        series: [ {
+			            name: 'Year 2022',
+			            data: [{{IGC}},{{IGS}},{{IGN}},{{NI}},{{CI}},{{SI}},{{BU}},{{TE}},{{TW}}],
+			           
+			        }]
+			        
+			    });
+	
+	</script>
+		</div> -->
+		<!-- <div class="">
+			<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="margin-top:30px;" >
+				<div id="packagesbar1">
+				<div id="picontainer"></div>
+				</div>
+			</div> -->
+			<!-- <script type="text/javascript">
+				Highcharts.chart('picontainer', {
+				    chart: {
+				        plotBackgroundColor: null,
+				        plotBorderWidth: null,
+				        plotShadow: false,
+				        type: 'pie'
+				    },
+				    title: {
+				        text: '<b>Amount allocated per sector</b>'
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: false
+				            },
+				            showInLegend: true
+				        }
+				    },
+				    series: [{
+				        name: 'Brands',
+				        colorByPoint: true,
+				        data: [{
+				            name: 'Education',
+				            y: {{edu}},
+				            sliced: true,
+				            selected: true
+				        }, {
+				            name: 'Security',
+				            y: {{sec}}
+				        }, {
+				            name: 'Health',
+				            y: {{hea}}
+				        }, {
+				            name: 'Administration',
+				            y: {{admi}}
+				        }, {
+				            name: 'Water',
+				            y: {{wtr}}
+				        }, {
+				            name: 'Sport',
+				            y: {{sprt}}
+				        }, {
+				        	name: 'Environment',
+				        	y: {{env}}
+				        }
+				        ]
+				    }]
+				});
+			</script> -->
+			<!-- <br><br><br><br>
+			<figure class="highcharts-figure">
+				  <div id="container"></div>
+				  <p class="highcharts-description">
+				   <script type="text/javascript">
+				Highcharts.chart('container', {
+				  chart: {
+				    plotBackgroundColor: null,
+				    plotBorderWidth: null,
+				    plotShadow: false,
+				    type: 'pie'
+				  },
+				  title: {
+				    text: 'Chart of different sector projects in meru county, 2022'
+				  },
+				  tooltip: {
+				    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				  },
+				  accessibility: {
+				    point: {
+				      valueSuffix: '%'
+				    }
+				  },
+				  plotOptions: {
+				    pie: {
+				      allowPointSelect: true,
+				      cursor: 'pointer',
+				      dataLabels: {
+				        enabled: true,
+				        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+				      }
+				    }
+				  },
+				  series: [{
+				    name: 'Brands',
+				    colorByPoint: true,
+				    data: [{
+				      name: 'Education',
+				      y: {{edu}},
+				      sliced: true,
+				      selected: true
+				    }, {
+			            name: 'Security',
+			            y: {{sec}}
+			        }, {
+			            name: 'Health',
+			            y: {{hea}}
+			        }, {
+			            name: 'Administration',
+			            y: {{admi}}
+			        }, {
+			            name: 'Water',
+			            y: {{wtr}}
+			        }, {
+			            name: 'Sport',
+			            y: {{sprt}}
+			        }, {
+			        	name: 'Environment',
+			        	y: {{env}}
+			        }
+				    ]
+				  }]
+				});
+			</script>
+
+			  </p>
+			</figure>
+			
+
+			{% for s in reports %}
+			<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="margin-top: 30px;" >
+				<div id="packagess">
+					<a href="{% url 'details' s.id %}"><p>{{s.project}}</p></a>
+					<p>{{s.descrition | truncatewords:"10"}} <a href="{% url 'details' s.id %}"><br>Read More</a></p>
+					{% if user.is_staff %}
+					<a href="{% url 'details' s.id %}">Comments: {{ s.comments.count }}</a>
+					{% else %}
+					<a href="{% url 'details' s.id %}">Comments: {{ s.approved_comments.count }}</a>
+					{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+		</div> -->
+		<script type="text/javascript" src="{%static 'plugins/leaflet-heat.js' %}"></script>
+
+	</div>
+</div>
+</section>
+		
+{% include 'temps/pagination.html' %}
+{% endblock %}

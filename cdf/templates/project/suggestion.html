@@ -1,0 +1,28 @@
+{% extends 'project/base.html' %}
+{% block title%}
+Suggestions
+{% endblock%}
+{% block content %}
+<div class="container">
+<div class="reporter">
+	<div class="row">
+		<form action="" role="" method="post">
+			{% csrf_token %}
+				<label>Suggestion</label><br>
+				{{sugg.suggestion}}<br><br>
+				<label>Body</label><br>
+				{{sugg.body}}<br><br>
+				<label>Status</label><br>
+				{{sugg.status}}<br><br>
+				<label>Name</label><br>
+				{{sugg.name}}<br><br>
+				<label>Email</label><br>
+				{{sugg.email}}<br><br>
+
+			<input type="submit" name="submit" class="btn btn-primary btn-xs" value="Report Incident">
+		</form>
+	</div>
+	
+</div>
+</div>
+{% endblock %}

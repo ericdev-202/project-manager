@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title%}
+Reports
+{% endblock%}
+{% block content %}
+<div class="event">
+    <div class="row">
+        <form action="" role="" method="post">
+            {% csrf_token %}
+
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <label>Title of the Event</label><br>
+                {{form.title}}<br><br>
+                <label>Description</label><br>
+                {{form.description}}<br><br>
+                <label>Meeting Date</label><br>
+                {{form.mdate}}<br><br>
+                <label>Meeting Time</label><br>
+                {{form.mtime}}<br><br>
+            </div>
+
+            <div class="col-lg-9 col-md-9 col-sm-12">
+                <div id="address" style=" height: 450px;"></div>
+                <input id="coordinates" name="coordinates" value="" type="hidden" />
+                <br><br>
+                <input type="submit" name="submit" class="btn btn-primary btn-xs" value="Create The Event">
+            </div>
+
+            
+        </form>
+        
+    </div>
+    
+</div>
+<!-- Geolocation map -->
+<script type="text/javascript">
+    var mymap = L.map('address').setView([-0.3976933016545059,36.96074903011323], 13);
+
+    // var marker = new L.Marker([-0.3976933016545059,36.96074903011323]);
+
+    // marker.bindPopup('This is where we are located').openPopup();
+    // marker.addTo(mymap)
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiaXJ1bmd1YXl1YiIsImEiOiJjamZ4cWk3cjIxbWp5MnJxcXkyazh2NXRnIn0.7BFq1ew_8pN519OPTbGRMQ'}).addTo(mymap);
+
+     // Geolocation Section
+     // mymap.locate({setView: true,maxZoom:17});
+     // function onLocationFound(e)
+     // {
+     //     var radius = e.accuracy / 2
+     //     var lat = e.latlng.lat
+     //     var lng = e.latlng.lng
+     //     console.log(e.latlng.lng)
+     //     // Script for picking the coordinates and matching them to the id
+     //     $('#coordinates').val(lng + ',' + lat) 
+     //     console.log('I am done!')
+     //     L.marker(e.latlng).addTo(mymap).bindPopup('You are within ' + radius + ' meters from this point').openPopup();
+     //     L.circle(e.latlng,radius).addTo(mymap);
+     // }
+
+     // mymap.on('locationfound',onLocationFound);
+
+     // function onLocationError(e)
+     // {
+     //     alert(e.message);
+     // }
+
+     // mymap.on('locationerror',onLocationError);
+
+      function onMapClick(e) {
+          var lat = e.latlng.lat;
+          var lng = e.latlng.lng;           
+
+          // Every time when user click on map we want to delete previous marker and create new marker on the new position where the user clicked      
+          if (typeof marker != 'undefined') {
+              mymap.removeLayer(marker);  // delete previous marker
+              marker = L.marker([lat, lng]).addTo(mymap);  // add new marker
+          }
+          else {
+              marker = L.marker([lat, lng]).addTo(mymap);  // add new marker
+          }
+          
+          // we want to pass value of longitued and latitude to input field with id 'coordinates'
+          // note that we set that field as hidden because we don't want user to type the coordinates there. We want him to set marker on map 
+          $('#coordinates').val(lng + ',' + lat) 
+          alert('coordinates:' + lng + ',' + lat)         
+        }
+
+        // call the onMapClick function when user click on map
+        mymap.on('click', onMapClick);
+</script>
+{% endblock %}

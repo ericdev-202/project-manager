@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title%}
+Project Details
+{% endblock%}
+{% block content %}
+  <section style="margin-top:50px" class="home-section">
+    <div class="home-content">
+      <div class="col-md-12">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <br><a class="btn btn-default" href="https://web.facebook.com/groups/187985118765818/?ref=bookmarks">Comment on facebook</a>
+				<div id="packagesd">
+					<h2>The project title is {{projd.project}}</h2>
+					<p>This project is in sector of {{projd.sectors}}, and lies within {{projd.county_nam}} county, in a place called {{projd.location}}, 
+					 the amount allocated to this project is {{projd.amount}}, the status of the project is {{projd.status}}</p>
+					<p>The brief introduction to the project: {{projd.descrition }} and finally the remarks from the responsible department: {{projd.remarks}}</p>
+
+					<hr>
+				<a class="btn btn-default" href="{% url 'add_comment_to_post' pk=projd.pk %}">Add comment</a>
+	{% for comment in projd.comments.all %}
+    {% if user.is_authenticated or comment.approved_comment %}
+    <div class="comment">
+        <div class="date">
+            {{ comment.created_date }}
+            {% if not comment.approved_comment %}
+                <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="fa fa-close"></span></a>
+                <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="	fa fa-hand-o-right"></span></a>
+            {% endif %}
+        </div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+    </div>
+    {% endif %}
+{% empty %}
+    <p>No comments here yet :(</p>
+{% endfor %}
+				</div>
+			</div>
+		
+	</div>
+</div>
+</section>
+			
+{% endblock %}

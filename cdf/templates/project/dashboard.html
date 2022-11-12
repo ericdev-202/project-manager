@@ -1,0 +1,175 @@
+
+<!-- //templates/show.html -->
+{% extends "lectures/index.html" %}
+ 
+{% block title %}Employee Records{% endblock title %}
+ 
+{% block content %}
+{% if request.user.is_authenticated  and user.is_lecturer %}
+<style type="text/css">
+  .wrapper {
+  padding: 0px;
+  margin-left: 12px;
+  padding-top: 5px;
+  background: var(--second-bg-color);
+  transition: margin-left .5s;
+}
+.row {
+  /*display: flex;*/
+  /*flex-wrap: wrap;*/
+  /*flex-direction: row;*/
+}
+
+.row:after, .row:before {
+  box-sizing: border-box;
+}
+
+[class*="col-"] {
+  padding: 10px;
+}
+.counter {
+  width: 240px;
+  height: 130px;
+  padding: 16px;
+  text-align: center;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.couner i {
+  font-size: 50px;
+}
+@media only screen and (min-width: 768px) {
+  .col-m-1 {width: 8.33%;}
+  .col-m-2 {width: 16.66%;}
+  .col-m-3 {width: 25%;}
+  .col-m-4 {width: 33.33%;}
+  .col-m-5 {width: 41.66%;}
+  .col-m-6 {width: 50%;}
+  .col-m-7 {width: 58.33%;}
+  .col-m-8 {width: 66.66%;}
+  .col-m-9 {width: 75%;}
+  .col-m-10 {width: 83.33%;}
+  .col-m-11 {width: 91.66%;}
+  .col-m-12 {width: 100%;}
+}
+
+/* laptops/desktops >= 992px */
+@media only screen and (min-width: 992px) {
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+
+/* large laptops and desktops >= 1200px */
+@media only screen and (min-width: 1200px) {
+  .col-xl-1 {width: 8.33%;}
+  .col-xl-2 {width: 16.66%;}
+  .col-xl-3 {width: 25%;}
+  .col-xl-4 {width: 33.33%;}
+  .col-xl-5 {width: 41.66%;}
+  .col-xl-6 {width: 50%;}
+  .col-xl-7 {width: 58.33%;}
+  .col-xl-8 {width: 66.66%;}
+  .col-xl-9 {width: 75%;}
+  .col-xl-10 {width: 83.33%;}
+  .col-xl-11 {width: 91.66%;}
+  .col-xl-12 {width: 100%;}
+}
+</style>
+  <section style="margin-top:50px" class="home-section">
+    <div class="home-content">
+      <div class="col-md-12">
+    
+      
+  <div class="wrapper">
+    <div class="row">
+      <div class="col-3 col-m-6 col-sm-6">
+        <div class="counter bg-primary">
+          <p>
+            <i class="fas fa-users"></i>
+          </p>
+          <h3>{{total_student}}</h3>
+          <p>Total Students</p>
+        </div>
+      </div>
+      <div class="col-3 col-m-6 col-sm-6">
+        <div class="counter bg-primary">
+          <p>
+            <i class="fas fa-hat-cowboy"></i>
+          </p>
+          <h3>{{total_student_company}}</h3>
+          <p>Total Student Filled Company Details</p>
+        </div>
+      </div>
+      <div class="col-3 col-m-6 col-sm-6">
+        <div class="counter bg-primary">
+          <p>
+            <i class="fas fa-hat-cowboy"></i>
+          </p>
+          <h3>{{total_student_assessed}}</h3>
+          <p>Total Student Assessed By Field Supervisor</p>
+        </div>
+      </div>
+      <div class="col-3 col-m-6 col-sm-6">
+        <div class="counter bg-primary">
+          <p>
+            <i class="fas fa-hat-cowboy"></i>
+          </p>
+          <h3>{{total_student_assessed_lecturer}}</h3>
+          <p>Total Student Assessed By Lecturer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+     <!-- <span><a href="" class="btn btn-primary">Add New Record</a></span>   -->
+<h4 style="margin-left:50px">List Of Students And Their Details</h4><br>
+        <div class="table">
+  <table id="bootstrapdatatable" class="table table-striped table-bordered" width="100%">
+            <thead>
+                <!-- <th><input type="checkbox" id="checkall" /></th> -->
+                <th style="width:20px !important;display: none;">ID</th>
+                <th>Student Name</th>
+                <th>Registration</th>
+                <th>Course Name:</th>
+                <th>Year Of Study</th>                
+                <th>School</th>
+                <th>University/College</th>
+                <!-- <th>Status</th> -->
+                <!-- <th>Assessment</th> -->
+             </thead>
+   <tbody>
+   {% for student in students %}  
+    <tr>  
+     <td>{{student.student_name}}</td>
+     <td>{{ student.regno}}</td> 
+     <td>{{ student.coursename}}</td>
+     <td>{{student.year_of_study}}</td>   
+     <td>{{student.school}}</td>
+     <td>{{student.university_name}}</td>  
+     <td></td>
+    </tr>  
+   {% endfor %} 
+   </tbody>
+         
+  </table>
+
+    </div>
+    </div>
+  </section>
+
+   {% else %}
+  <p>You are Not allowed to access this page</p>
+{% endif %}
+
+{% endblock content %}

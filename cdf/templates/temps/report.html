@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title%}
+Reports
+{% endblock%}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+
+<link rel="stylesheet" type="text/css" href="https://www.bootstrapcdn.com/fontawesome/">
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdnout.com/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.js"></script>
+<link href="https://cdnout.com/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css" rel="stylesheet" media="all">
+  <section style="margin-top:10px" class="home-section">
+    <div class="home-content">
+      <div class="col-md-12">
+		<div class="event">
+	<div class="row">
+		<form enctype="multipart/form-data"  action="" role="" method="post">
+			{% csrf_token %}
+
+			<div class="col-lg-3 col-md-3 col-sm-12" style="font-size: 13px; padding-left: 3px; margin-top: 50px;">
+				<!-- {{reports.image}}<br> -->
+				<!-- {{reports.description}}<br> -->
+				<!-- {{reports.opinion}} -->
+				<div class="form-group row">
+					  <label class="col-sm-2 col-form-label">Description:</label>
+					  <div class="col-sm-12">
+					  	  <input type="text" id="description" required name="description" value="" class="form-control">  
+			      </div>  
+			  </div> 
+			  <div class="form-group row">
+					  <label class="col-sm-2 col-form-label">Opinion:</label>
+					  <div class="col-sm-12">
+					  	  <select style="" class="form-control" required name="opinion" id="id_opinion">
+				          <option>Select opinion here</option>
+				          <option>Comment</option>
+				          <option>Complain</option>
+				        </select>
+			      </div>  
+			  </div>  
+			  <div class="form-group row">
+					  <label class="col-sm-2 col-form-label">Images:</label>
+					  <div class="col-sm-12">
+					  	  <input type="file" id="images" required name="images" value="" class="form-control" multiple>  
+			      </div>  
+			  </div>
+			  <div class="form-group row">
+					  <!-- <label class="col-sm-2 col-form-label">Images:</label> -->
+					  <div class="col-sm-12">
+					  	  <input type="submit" name="submit" class="btn btn-primary btn-xs" value="Report Incident" style="width:px;">
+			      </div>  
+			  </div>      
+				
+				
+				
+			</div>
+
+			<div class="col-lg-9 col-md-9 col-sm-12" style="margin-top: 50px;">
+				<div id="address" style=" height: 450px; width: 750px;"></div>
+				<input id="coordinates" name="coordinates" value="" type="hidden" />
+				<br><br>
+				
+			</div>
+
+			
+		</form>
+		
+	</div>
+	
+</div>
+<!-- Geolocation map -->
+<script type="text/javascript">
+
+  var mymap = L.map('address').setView([0.053543,37.648399], 13);
+
+
+		var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(mymap);
+
+
+	// var mymap = L.map('address').setView([-0.121861,34.569815], 13);
+
+	// var marker = new L.Marker([-0.3976933016545059,36.96074903011323]);
+
+	// marker.bindPopup('This is where we are located').openPopup();
+	// marker.addTo(mymap)
+
+	// L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+ //    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+ //    maxZoom: 18,
+ //    id: 'mapbox.streets',
+ //    accessToken: 'pk.eyJ1IjoiaXJ1bmd1YXl1YiIsImEiOiJjamZ4cWk3cjIxbWp5MnJxcXkyazh2NXRnIn0.7BFq1ew_8pN519OPTbGRMQ'}).addTo(mymap);
+
+     // Geolocation Section
+	 // mymap.locate({setView: true,maxZoom:17});
+	 // function onLocationFound(e)
+	 // {
+	 // 	var radius = e.accuracy / 2
+	 // 	var lat = e.latlng.lat
+	 // 	var lng = e.latlng.lng
+	 // 	console.log(e.latlng.lng)
+	 // 	// Script for picking the coordinates and matching them to the id
+	 // 	$('#coordinates').val(lng + ',' + lat) 
+	 // 	console.log('I am done!')
+	 // 	L.marker(e.latlng).addTo(mymap).bindPopup('You are within ' + radius + ' meters from this point').openPopup();
+	 // 	L.circle(e.latlng,radius).addTo(mymap);
+	 // }
+
+	 // mymap.on('locationfound',onLocationFound);
+
+	 // function onLocationError(e)
+	 // {
+	 // 	alert(e.message);
+	 // }
+
+	 // mymap.on('locationerror',onLocationError);
+
+	  function onMapClick(e) {
+          var lat = e.latlng.lat;
+          var lng = e.latlng.lng;           
+
+          // Every time when user click on map we want to delete previous marker and create new marker on the new position where the user clicked      
+          if (typeof marker != 'undefined') {
+              mymap.removeLayer(marker);  // delete previous marker
+              marker = L.marker([lat, lng]).addTo(mymap);  // add new marker
+          }
+          else {
+              marker = L.marker([lat, lng]).addTo(mymap);  // add new marker
+          }
+          
+          // we want to pass value of longitued and latitude to input field with id 'coordinates'
+          // note that we set that field as hidden because we don't want user to type the coordinates there. We want him to set marker on map 
+          $('#coordinates').val(lng + ',' + lat) 
+          // alert('coordinates:' + lng + ',' + lat)         
+        }
+
+        // call the onMapClick function when user click on map
+        mymap.on('click', onMapClick);
+</script>
+	</div>
+</div>
+</section>
+
+{% endblock %}

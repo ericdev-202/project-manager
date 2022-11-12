@@ -1,0 +1,60 @@
+{% extends 'Admin/base.html' %}
+{% block content %}
+
+	<!-- main content -->
+	  <section style="margin-top:70px" class="home-section">
+    <div class="home-content">
+      <div class="col-md-12">
+	<!-- <div class="wrapper"> -->
+
+<!-- ****** table  start ********** -->
+		<div class="row">
+			<div class="col-12 col-m-12 col-sm-12">
+				<div class="card">
+					<div class="card-header">
+						<h3 style="color:red; text-align:center" >Engineers Reports
+						</h3>
+
+					</div>
+					<div class="card-content">
+						<table>
+							<thead>
+                <tr>
+                  <th>Project Name</th>
+                  <th>Project Location</th>
+                  <th>Engineer Name</th>
+                  <th>Engineer Report</th>
+                  <th>Engineer Images</th>
+                  <th>Phase</th>
+                  <th>Progress</th>
+                  <th>Approval</th>
+                </tr>
+							</thead>
+							<tbody>
+                {% for c,r in data %}
+                <tr>
+                  <td> {{c.project}}</td>
+                  <td>{{ c.location}}</td>
+                  <td> {{c.project_eng}}</td>
+                  <td><p>{{r.eng_report}}<a href="{{ r.eng_report.url }}" download="{{ r.Title }}">Download</p></td>
+                  <td><img src="{{r.eng_images.url }}"  height="40px" width="140px"/><p><a href="{{  r.eng_images.url }}"  download="{{ r.Title }}">Download</p></td>
+                  <td>{{ r.phases}}</td>
+                  <td><progress id="file" max="100" value="{{ r.progress }}"> {{ r.progress }}% </progress>{{ r.progress }}%</td>
+                  <td>{{ r.eng_approve }}</td>
+
+                </tr>
+                {% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- ****** table start ********** -->
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	</div>
+</div>
+</section>
+	<!-- end main content -->
+{% endblock content %}

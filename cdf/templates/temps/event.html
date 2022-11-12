@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load leaflet_tags %}
+{% block title%}
+Events
+{% endblock%}
+{% block content %}
+<section style="margin-top:50px" class="home-section">
+<div class="home-content">
+    <div class="col-md-12">
+<h1>Events</h1>
+<div class="event">
+	<div class="row">
+	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+		{% for e in eventss %}
+		<p style="color: purple; font-family: verdana"> {{e.title}} this event was posted on {{e.created}} .</p>
+		<p>The meeting date will be on {{e.mdate}} at {{e.mtime}} </p>
+
+		
+		
+		<p>The belief Description <br>{{e.description | truncatewords:"10"}}</p>
+
+		{% endfor %}
+		<!-- <h2>testing</h2> -->
+		{% for d in tet %}
+			{{d.mdate}}
+		{% endfor %}
+	</div>
+
+		<script type="text/javascript">
+			function layer(map,options){
+				
+				// L.marker([-0.023, 37.5]).addTo(map);
+				var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+                var opentopomap = new L.TileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png');
+                var arcon = new L.tileLayer('http://server.arcgisonline.com/ArcGis/rest/services/World_Imagery/Mapserver/tile/{z}/{y}/{x}');
+				var datasets = new L.GeoJSON.AJAX("{% url 'eventsdata' %}",{
+					 onEachFeature: function layerpopup(feature,layer){
+	                    layer.bindPopup(feature.properties.description.toString())
+	                            }
+				});
+
+				datasets.addTo(map);
+				var baseLayers = {
+                        'OSM':osm
+                        }
+                var groupedOverlays = {
+                        "layers": {
+                        	"Events":datasets,
+                        	"OpenTopoMap":opentopomap,
+                        	"Imagery": arcon
+                        		
+                       	}
+                    };
+                 L.control.groupedLayers(baseLayers,groupedOverlays).addTo(map);
+                 L.Control.geocoder().addTo(map);
+
+                 L.Routing.control({
+                    waypoints:[
+                        L.latLng(-0.071068, 34.498469),
+            			L.latLng(-0.128746, 34.511862)
+                        	],
+                        	routeWhileDragging:true,
+                        	geocoder:L.Control.Geocoder.nominatim()
+                    }).addTo(map);
+
+			}
+		</script>
+	<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+		{% leaflet_map 'events' callback="layer" %}
+	</div>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+{% endblock %}

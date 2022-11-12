@@ -1,0 +1,66 @@
+
+<!-- //templates/show.html -->
+{% extends "Engineer/index.html" %}
+ {% load static %}
+{% block title %}Employee Records{% endblock title %}
+ 
+{% block content %}
+
+  <section style="margin-top:130px" class="home-section">
+    <div class="home-content">
+      <div class="col-md-12">
+        <h3 style="color:red; text-align:center" >Approved Project Details
+            </h3>
+
+        <div class="table">
+  <table id="bootstrapdatatable" class="table table-striped table-bordered" width="100%">
+            <thead>
+                <!-- <th style="width:20px !important;display: ;">ID</th> -->
+                <th style="width:90px !important;">Project Name</th>
+                <!-- <th style="text-align:center">Contractor Name</th>                 -->
+                <th>Contractor Report</th>
+                <th>Contractor Images</th>
+                <th>Progress</th>
+                <th>Phases</th>
+                <!-- <th>Acceptance</th> -->
+                <!-- <th>Engineer Name:</th> -->
+                <!-- <th>Engineer Report:</th> -->
+                <th>Engineer Images</th>
+                <th>Engineer Approval</th>
+                <th>Project Manager Report</th>
+                <th>Project Manager Approval</th>
+                <!-- <th>Update</th> -->
+             </thead>
+  {% for  i,j,k in data %}
+
+   <tbody>
+
+    <tr id="students-{{students.id}}">  
+     <!-- <td style="display:;">{{ j.id }}</td>  -->
+     <td class="col-sm-1"style="width:150px !important;">{{ j.cdfproject  }}</td>
+     <!-- <td style="height: 110px !important; width: 350px !important;">{{ i.project_cont}}</td>   -->
+     <td><p><a href="{{ i.contr_report.url }}" download="{{ i.Title }}">{{ i.contr_report.url }}</p></td>
+     <td><p><a href="{{  i.contr_images.url }}"  download="{{ i.Title }}"><br><img src="{{i.contr_images.url }}"  height="40px" width="140px"/></p></td>
+     <td><progress id="file" max="100" value="{{ i.progress }}"> {{ i.progress }}% </progress>{{ i.progress }}%</td>
+
+     <td>{{ i.phases }}</td> 
+     <!-- <td>{{ i.contr_accept }}</td> -->
+     <!-- <td>{{ j.project_eng }}</td> -->
+     <!-- <td><p><a href="{{ j.eng_report.url }}" download="{{ j.Title }}">{{ j.eng_report.url }}</p></td> -->
+     <td><p><a href="{{  j.eng_images.url }}"  download="{{ j.Title }}"><br><img src="{{j.eng_images.url }}"  height="40px" width="140px"/></p></td>
+     <td><button class="btn btn-success">{{ j.eng_approve}}</button></td> 
+     <td><p><a href="{{ k.proj_report.url }}" download="{{ k.Title }}">{{ k.proj_report.url }}</p></td>
+     <td><button class="btn btn-success">{{ k.proj_approve}}</button></td>
+    </tr>  
+
+   </tbody>
+{% endfor %}
+
+  </table>
+
+    </div>
+    </div>
+  </section>
+
+
+{% endblock content %}

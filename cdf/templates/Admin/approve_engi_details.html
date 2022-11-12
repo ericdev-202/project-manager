@@ -1,0 +1,56 @@
+{% extends 'Admin/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<head>
+  <style media="screen">
+    input[type=text], select,input[type=number] , textarea{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  input[type=submit]:hover {
+    background-color: #45a049;
+  }
+
+
+  </style>
+
+
+</head>
+    <section style="margin-top:70px" class="home-section">
+    <div class="home-content">
+      <div class="col-md-12">
+<br><br><br><br><br>
+<h3 style="text-align:center;">Update</h3>
+<div>
+  <form method="post" style="margin-left:200px;margin-right:200px;">
+      {% csrf_token %}
+<label for="salary">Activate</label>
+    {% render_field engineers.salary class="form-control" placeholder="Enter 1 to approve" %}
+    <input type="submit" value="Approve">
+  </form>
+</div>
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</div>
+</div>
+</section>
+{% endblock content %}

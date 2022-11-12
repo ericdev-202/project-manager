@@ -1,0 +1,42 @@
+[
+{
+  "model": "cdf.cdfprojects",
+  "pk": 1,
+  "fields": {
+    "project": "otwero primary sch",
+    "descrition": "1 classroom construction",
+    "remarks": "completed",
+    "sectors": "education",
+    "amount": 852585,
+    "status": "Complete",
+    "lat": -0.358,
+    "county_nam": "kisumu",
+    "location": "Otwenya",
+    "lon": 36.6985,
+    "geom": "{\"type\":\"MultiPoint\",\"coordinates\":[[34.534093,-0.114399]]}"
+  }
+},
+{
+  "model": "cdf.comment",
+  "pk": 1,
+  "fields": {
+    "post": 1,
+    "author": "Ayub",
+    "text": "This project has been well implemented",
+    "created_date": "2018-12-07T07:53:32.280Z",
+    "approved_comment": false
+  }
+},
+{
+  "model": "cdf.report",
+  "pk": 1,
+  "fields": {
+    "image": "reportImages/18/12/07/localhost_8100_iPad_7.png",
+    "description": "test",
+    "geom": "{\"type\":\"Point\",\"coordinates\":[34.53272,-0.100826]}",
+    "created": "2018-12-07T07:59:01.689Z",
+    "opinion": "Comment",
+    "modified": "2018-12-07T07:59:01.689Z"
+  }
+}
+]

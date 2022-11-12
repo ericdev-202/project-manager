@@ -1,0 +1,59 @@
+
+{% extends "Engineer/index.html" %}
+ {% load static %}
+{% block title %}Employee Records{% endblock title %}
+ 
+{% block content %}
+
+  <section style="margin-top:130px" class="home-section">
+    <div class="home-content">
+      <div class="col-md-12">
+        <h3 style="color:red; text-align:center" >Contractor Progress
+            </h3><br><br>
+        <div class="table">
+  <table id="bootstrapdatatable" class="table table-striped table-bordered" width="100%">
+            <thead>
+                <th style="width:20px !important;display: none;">ID</th>
+                <th>Project Name</th>
+                <th style="text-align:center">Contractor Report</th>
+                <th>Contractor Images:</th>
+                <th>Phases</th>
+                <th>Progress</th>
+                <!-- <th>Approval</th> -->
+                <!-- <th>Update</th> -->
+             </thead>
+
+  {% for  j in proj %}
+
+
+   <tbody>
+
+    <tr id="j-{{j.id}}">  
+     <td style="display:none;">{{ i.id }}</td> 
+     <td class="col-sm-1">{{ j.cdfproject  }}</td>
+
+     <td style="height: 110px !important; width: 350px !important;"><p><a href="{{ j.contr_report.url }}" download="{{ j.Title }}">{{j.contr_report}}</p></td>
+      <td><img src="{{j.contr_images.url }}"  height="40px" width="140px" /></td> 
+     <td style="width: 70px !important;" class="col-sm-4">{{ j.phases}}</td>
+     <!-- <td>{{ j.eng_approve}}</td>  -->
+     <td><progress id="file" max="100" value="{{ j.progress }}"> {{ j.progress }}% </progress>{{ j.progress }}%</td>
+
+            
+    </tr>  
+
+   </tbody>
+{% endfor %}
+
+  </table>
+
+    </div>
+    </div>
+  </section>
+
+
+{% endblock content %}
+<!--   <section class="home-section">
+    <div class="home-content">
+
+    </div>
+  </section> -->
